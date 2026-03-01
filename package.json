@@ -1,0 +1,27 @@
+{
+  "name": "vetice-bnb",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Plataforma de búsqueda de alojamiento estudiantil con geolocalización",
+  "author": "Vértice Team",
+  "license": "MIT",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean && rimraf node_modules",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "rimraf": "^5.0.5",
+    "turbo": "^2.0.0",
+    "typescript": "5.4.5"
+  },
+  "packageManager": "npm@10.5.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}

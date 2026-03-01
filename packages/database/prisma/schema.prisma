@@ -1,0 +1,273 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../src/generated"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [postgis]
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum Role {
+  STUDENT
+  HOST
+  ADMIN
+}
+
+enum KycStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  NONE
+}
+
+enum PropertyType {
+  ROOM
+  APARTMENT
+  HOUSE
+}
+
+enum Gender {
+  MIXED
+  FEMALE_ONLY
+  MALE_ONLY
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELED
+  COMPLETED
+}
+
+enum KycType {
+  STUDENT_ID
+  ENROLLMENT_CERT
+  ID_CARD
+}
+
+// ============================================
+// MODELOS PRINCIPALES
+// ============================================
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  password     String
+  role         Role          @default(STUDENT)
+  isVerified   Boolean       @default(false)
+  kycStatus    KycStatus     @default(NONE)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  studentProfile StudentProfile?
+  hostProfile    HostProfile?
+  refreshTokens  RefreshToken[]
+  ownedProperties     Property[]    @relation("UserOwnedProperties")
+  bookings       Booking[]
+  sentMessages   Message[]     @relation("SentMessages")
+  receivedMessages Message[]   @relation("ReceivedMessages")
+  kycDocuments   KYCDocument[]
+  reviews        Review[]      @relation("WrittenReviews")
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("refresh_tokens")
+}
+
+model StudentProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique @map("user_id")
+  firstName   String   @map("first_name")
+  lastName    String   @map("last_name")
+  phone       String?
+  university  String?
+  major       String?
+  enrollmentYear Int?  @map("enrollment_year")
+  avatar      String?
+  bio         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("student_profiles")
+}
+
+model HostProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique @map("user_id")
+  firstName   String   @map("first_name")
+  lastName    String   @map("last_name")
+  phone       String?
+  idCard      String?  @map("id_card")
+  avatar      String?
+  bio         String?
+  isVerified  Boolean  @default(false) @map("is_verified")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  properties Property[]
+
+  @@index([userId])
+  @@map("host_profiles")
+}
+
+model Property {
+  id             String   @id @default(uuid())
+  hostId         String   @map("host_id")
+  studentId      String?  @map("student_id")
+  title          String
+  description    String
+  priceUsd       Decimal  @db.Decimal(10, 2) @map("price_usd")
+  location       Unsupported("geography(Point, 4326)")
+  address        String
+  city           String?
+  state          String?
+  country        String   @default("Venezuela")
+  type           PropertyType
+  gender         Gender
+  rules          Json?
+  services       Json?
+  paymentMethods Json?    @map("payment_methods")
+  isActive       Boolean  @default(true) @map("is_active")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  host     HostProfile     @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  student  User?           @relation("UserOwnedProperties", fields: [studentId], references: [id], onDelete: SetNull)
+  images   PropertyImage[]
+  bookings Booking[]
+  messages Message[]      @relation("MessageProperty")
+  reviews  Review[]
+
+  @@index([hostId])
+  @@index([isActive])
+  @@index([type])
+  @@index([city])
+  @@map("properties")
+}
+
+model PropertyImage {
+  id         String   @id @default(uuid())
+  propertyId String   @map("property_id")
+  url        String
+  caption    String?
+  order      Int      @default(0)
+  isPrimary  Boolean  @default(false) @map("is_primary")
+  createdAt  DateTime @default(now())
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+  @@index([isPrimary])
+  @@map("property_images")
+}
+
+model Booking {
+  id            String   @id @default(uuid())
+  propertyId    String   @map("property_id")
+  studentId     String   @map("student_id")
+  startDate     DateTime @map("start_date")
+  endDate       DateTime @map("end_date")
+  totalPriceUsd Decimal  @db.Decimal(10, 2) @map("total_price_usd")
+  rateApplied   Decimal  @db.Decimal(10, 4) @map("rate_applied")
+  status        BookingStatus
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  student  User    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  review   Review?
+
+  @@index([propertyId])
+  @@index([studentId])
+  @@index([status])
+  @@map("bookings")
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  senderId   String   @map("sender_id")
+  receiverId String   @map("receiver_id")
+  propertyId String?  @map("property_id")
+  content    String
+  readAt     DateTime? @map("read_at")
+  createdAt  DateTime @default(now())
+
+  sender   User      @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User      @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  property Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull, name: "MessageProperty")
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([createdAt])
+  @@map("messages")
+}
+
+model ExchangeRate {
+  id       Int      @id @default(autoincrement())
+  currency String   @default("VES")
+  rate     Decimal  @db.Decimal(10, 4)
+  source   String?  @default("BCV")
+  date     DateTime @default(now())
+
+  @@index([date])
+  @@index([currency])
+  @@map("exchange_rates")
+}
+
+model KYCDocument {
+  id        String    @id @default(uuid())
+  userId    String    @map("user_id")
+  type      KycType
+  fileUrl   String    @map("file_url")
+  status    KycStatus @default(PENDING)
+  reviewedBy String?  @map("reviewed_by")
+  notes     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@map("kyc_documents")
+}
+
+model Review {
+  id          String   @id @default(uuid())
+  bookingId   String   @unique @map("booking_id")
+  propertyId  String   @map("property_id")
+  authorId    String   @map("author_id")
+  rating      Int      @db.SmallInt // 1-5
+  comment     String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  booking  Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  author   User     @relation("WrittenReviews", fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+  @@index([authorId])
+  @@map("reviews")
+}

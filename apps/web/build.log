@@ -1,0 +1,10 @@
+
+> @vetice/web@0.0.1 build
+> next build
+
+   ▲ Next.js 16.0.0 (Turbopack)
+   - Environments: .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 12.6s
+   Running TypeScript ...

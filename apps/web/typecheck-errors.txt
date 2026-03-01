@@ -1,0 +1,26 @@
+src/app/search/page.tsx(10,30): error TS2345: Argument of type '() => Promise<React.ForwardRefExoticComponent<MapContainerProps & React.RefAttributes<Map>>>' is not assignable to parameter of type 'DynamicOptions<MapContainerProps & RefAttributes<Map>> | Loader<MapContainerProps & RefAttributes<Map>>'.
+  Type '() => Promise<React.ForwardRefExoticComponent<MapContainerProps & React.RefAttributes<Map>>>' is not assignable to type '() => LoaderComponent<MapContainerProps & RefAttributes<Map>>'.
+    Type 'Promise<ForwardRefExoticComponent<MapContainerProps & RefAttributes<Map>>>' is not assignable to type 'LoaderComponent<MapContainerProps & RefAttributes<Map>>'.
+      Type 'ForwardRefExoticComponent<MapContainerProps & RefAttributes<Map>>' is not assignable to type 'ComponentType<MapContainerProps & RefAttributes<Map>> | ComponentModule<MapContainerProps & RefAttributes<Map>>'.
+        Type 'ForwardRefExoticComponent<MapContainerProps & RefAttributes<Map>>' is not assignable to type 'FunctionComponent<MapContainerProps & RefAttributes<Map>>'.
+          Type 'import("C:/Users/Gusgus/Documents/Proyectos/Vertice-bnb/apps/web/node_modules/@types/react/index").ReactNode' is not assignable to type 'React.ReactNode'.
+            Type 'ReactElement<unknown, string | JSXElementConstructor<any>>' is not assignable to type 'ReactNode'.
+              Property 'children' is missing in type 'ReactElement<unknown, string | JSXElementConstructor<any>>' but required in type 'ReactPortal'.
+src/app/search/page.tsx(11,27): error TS2345: Argument of type '() => Promise<React.ForwardRefExoticComponent<TileLayerProps & React.RefAttributes<TileLayer>>>' is not assignable to parameter of type 'DynamicOptions<TileLayerProps & RefAttributes<TileLayer>> | Loader<TileLayerProps & RefAttributes<TileLayer>>'.
+  Type '() => Promise<React.ForwardRefExoticComponent<TileLayerProps & React.RefAttributes<TileLayer>>>' is not assignable to type '() => LoaderComponent<TileLayerProps & RefAttributes<TileLayer>>'.
+    Type 'Promise<ForwardRefExoticComponent<TileLayerProps & RefAttributes<TileLayer>>>' is not assignable to type 'LoaderComponent<TileLayerProps & RefAttributes<TileLayer>>'.
+      Type 'ForwardRefExoticComponent<TileLayerProps & RefAttributes<TileLayer>>' is not assignable to type 'ComponentType<TileLayerProps & RefAttributes<TileLayer>> | ComponentModule<TileLayerProps & RefAttributes<TileLayer>>'.
+        Type 'ForwardRefExoticComponent<TileLayerProps & RefAttributes<TileLayer>>' is not assignable to type 'FunctionComponent<TileLayerProps & RefAttributes<TileLayer>>'.
+          Type 'import("C:/Users/Gusgus/Documents/Proyectos/Vertice-bnb/apps/web/node_modules/@types/react/index").ReactNode' is not assignable to type 'React.ReactNode'.
+src/app/search/page.tsx(12,24): error TS2345: Argument of type '() => Promise<React.ForwardRefExoticComponent<MarkerProps & React.RefAttributes<Marker<any>>>>' is not assignable to parameter of type 'DynamicOptions<MarkerProps & RefAttributes<Marker<any>>> | Loader<MarkerProps & RefAttributes<Marker<any>>>'.
+  Type '() => Promise<React.ForwardRefExoticComponent<MarkerProps & React.RefAttributes<Marker<any>>>>' is not assignable to type '() => LoaderComponent<MarkerProps & RefAttributes<Marker<any>>>'.
+    Type 'Promise<ForwardRefExoticComponent<MarkerProps & RefAttributes<Marker<any>>>>' is not assignable to type 'LoaderComponent<MarkerProps & RefAttributes<Marker<any>>>'.
+      Type 'ForwardRefExoticComponent<MarkerProps & RefAttributes<Marker<any>>>' is not assignable to type 'ComponentType<MarkerProps & RefAttributes<Marker<any>>> | ComponentModule<MarkerProps & RefAttributes<Marker<any>>>'.
+        Type 'ForwardRefExoticComponent<MarkerProps & RefAttributes<Marker<any>>>' is not assignable to type 'FunctionComponent<MarkerProps & RefAttributes<Marker<any>>>'.
+          Type 'import("C:/Users/Gusgus/Documents/Proyectos/Vertice-bnb/apps/web/node_modules/@types/react/index").ReactNode' is not assignable to type 'React.ReactNode'.
+src/app/search/page.tsx(13,23): error TS2345: Argument of type '() => Promise<React.ForwardRefExoticComponent<PopupProps & React.RefAttributes<Popup>>>' is not assignable to parameter of type 'DynamicOptions<PopupProps & RefAttributes<Popup>> | Loader<PopupProps & RefAttributes<Popup>>'.
+  Type '() => Promise<React.ForwardRefExoticComponent<PopupProps & React.RefAttributes<Popup>>>' is not assignable to type '() => LoaderComponent<PopupProps & RefAttributes<Popup>>'.
+    Type 'Promise<ForwardRefExoticComponent<PopupProps & RefAttributes<Popup>>>' is not assignable to type 'LoaderComponent<PopupProps & RefAttributes<Popup>>'.
+      Type 'ForwardRefExoticComponent<PopupProps & RefAttributes<Popup>>' is not assignable to type 'ComponentType<PopupProps & RefAttributes<Popup>> | ComponentModule<PopupProps & RefAttributes<Popup>>'.
+        Type 'ForwardRefExoticComponent<PopupProps & RefAttributes<Popup>>' is not assignable to type 'FunctionComponent<PopupProps & RefAttributes<Popup>>'.
+          Type 'import("C:/Users/Gusgus/Documents/Proyectos/Vertice-bnb/apps/web/node_modules/@types/react/index").ReactNode' is not assignable to type 'React.ReactNode'.
